@@ -15,7 +15,7 @@ class CitySeeder extends Seeder
     {
         Model::unguard();
 
-        $cities=[
+        $cities = [
             'London',
             'Paris',
             'Washington',
@@ -23,7 +23,7 @@ class CitySeeder extends Seeder
 
         foreach ($cities as $city) {
             City::firstOrCreate([
-                'name'=>$city,
+                'name' => $city,
             ]);
         }
 
