@@ -7,32 +7,35 @@ use GuzzleHttp\Client;
 use App\Models\WeatherStats;
 use Illuminate\Support\Collection;
 
-class ApixuService
+class OpenWeatherMapService
 {
     public function query(string $apiKey, Collection $cities): Collection
     {
         $result = collect();
 
         $guzzleClient = new Client([
-            'base_uri' => 'https://api.apixu.com'
+            'base_uri' => 'https://api.openweathermap.org'
         ]);
 
         foreach ($cities as $city) {
-            $response = $guzzleClient->get('v1/current.json', [
+            $response = $guzzleClient->get('data/2.5/weather', [
                 'query' => [
-                    'key' => $apiKey,
+                    'units' => 'metric',
+                    'APPID' => $apiKey,
                     'q' => $city->name,
                 ]
             ]);
 
             $response = json_decode($response->getBody()->getContents(), true);
 
+            // https://openweathermap.org/weather-data#current
             $stat = new WeatherStats();
             $stat->city()->associate($city);
-            $stat->temp_celsius = $response['current']['temp_c'];
-            $stat->status = $response['current']['condition']['text'];
-            $stat->last_update = Carbon::createFromTimestamp($response['current']['last_updated_epoch']);
-            $stat->provider = 'apixu.com';
+            $stat->temp_celsius = $response['main']['temp'];
+            $stat->status = $response['weather'][0] ?
+                $response['weather'][0]['main'] : '';
+            $stat->last_update = Carbon::createFromTimestamp($response['dt']); // 	Data receiving time
+            $stat->provider = 'openweathermap.org';
             $stat->save();
 
             $result->push($stat);
