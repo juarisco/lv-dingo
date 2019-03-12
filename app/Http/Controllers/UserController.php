@@ -25,9 +25,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::all();
+        $users = User::paginate(10);
 
-        return $this->response->collection($users, new UserTransformer());
+        return $this->response->paginator($users, new UserTransformer());
     }
 
     /**
