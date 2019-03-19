@@ -14,6 +14,7 @@ class UserSeeder extends Seeder
     {
         $users = factory(User::class)->times(50)->create();
 
+        echo PHP_EOL;
         foreach ($users as $user) {
             echo 'User generated. Email: ' . $user->email . PHP_EOL;
         }
