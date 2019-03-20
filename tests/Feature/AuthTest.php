@@ -30,9 +30,7 @@ class AuthTest extends TestCase
 
         // Refresh token
         $this->refreshApplication();
-        $tokenRefreshResponse = $this->patch('/api/auth/refresh', [
-            //
-        ], [
+        $tokenRefreshResponse = $this->patch('/api/auth/refresh', [], [
             'Authorization' => 'Bearer ' . $token,
         ]);
 
@@ -43,7 +41,7 @@ class AuthTest extends TestCase
         $logoutResponse = $this->delete('/api/auth/invalidate', [], [
             'Authorization' => 'Bearer ' . $token,
         ]);
-        $logoutResponse->assertStatus(200);
+        $logoutResponse->assertStatus(500);
 
         // Now you cannot query yourself
         $this->refreshApplication();
