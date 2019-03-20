@@ -11,7 +11,7 @@ class AuthTest extends TestCase
     public function testLoginLogout()
     {
         $user = factory(User::class)->create();
-        // $user->attachRole('root');
+        $user->attachRole('root');
         $user->save();
         // Login
         $response = $this->post('/api/auth/login', [
